@@ -82,4 +82,39 @@ defmodule CardTest do
       assert Card.card_to_string(card) == "AS"
     end
   end
+
+  describe "sort_cards()" do
+    test "given a list of %Card{}, returns the same list sorted by Card.Value.value_of" do
+      cards = [
+        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
+        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
+        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
+        %Card{value: Card.Value.Jack, suit: Card.Suit.Spades},
+        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
+      ]
+
+      assert Card.sort_cards(cards) ==
+               [
+                 %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
+                 %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
+                 %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
+                 %Card{value: Card.Value.Six, suit: Card.Suit.Hearts},
+                 %Card{value: Card.Value.Jack, suit: Card.Suit.Spades}
+               ]
+    end
+  end
+
+  describe "high_card()" do
+    test "given a list of %Card{}, returns the card with the highest ordered value" do
+      cards = [
+        %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts},
+        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
+        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
+        %Card{value: Card.Value.Jack, suit: Card.Suit.Spades},
+        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
+      ]
+
+      assert Card.high_card(cards) == %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts}
+    end
+  end
 end

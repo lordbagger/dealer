@@ -64,6 +64,14 @@ defmodule Card do
     value(Clubs, "C")
   end
 
+  def sort_cards(cards) when is_list(cards) do
+    Enum.sort(cards, fn c, n -> c.value.value_of <= n.value.value_of end)
+  end
+
+  def high_card(cards) when is_list(cards) do
+    Enum.max(cards, fn c, n -> c.value.value_of >= n.value.value_of end)
+  end
+
   def cards_to_string(cards) when is_list(cards) do
     cards |> Enum.map(fn c -> card_to_string(c) end)
   end
