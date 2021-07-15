@@ -88,6 +88,11 @@ defmodule Card do
     cards |> Enum.map(fn c -> card_from_string(c) end)
   end
 
+  def valid_cards?(cards) do
+    cards |> cards_from_string() |> Enum.all?(fn c -> is_card?(c) end) &&
+      Enum.count(cards) == 5
+  end
+
   defp check_length(string) do
     case String.length(string) != 2 do
       true -> :invalid_length
@@ -126,5 +131,13 @@ defmodule Card do
 
   defp to_card(error) when is_atom(error) do
     error
+  end
+
+  defp is_card?(%Card{value: _v, suit: _s}) do
+    true
+  end
+
+  defp is_card?(_any) do
+    false
   end
 end

@@ -31,6 +31,66 @@ defmodule TheHouseTest do
       assert TheHouse.check_winner(player_input, dealer_input) ==
                "Error: received empty hand from both players"
     end
+
+    test "returns an error if a player sends a PokerHand with less than 5 cards " do
+      player_input = {"Player", ["AS"]}
+      dealer_input = {"Dealer", ["AS", "KS", "QS", "JS", "TS"]}
+
+      suits = Card.Suit.values()
+      values = Card.Value.values()
+
+      TheHouse.start()
+
+      assert TheHouse.check_winner(player_input, dealer_input) ==
+               "Check your cards! Your hand must contain exactly 5 cards, Suits must be in #{
+                 suits
+               }. Values must be in #{values}"
+    end
+
+    test "returns an error if a player sends a PokerHand with more than 5 cards " do
+      player_input = {"Player", ["AS", "KS", "QS", "JS", "TS", "KH"]}
+      dealer_input = {"Dealer", ["AS", "KS", "QS", "JS", "TS"]}
+
+      suits = Card.Suit.values()
+      values = Card.Value.values()
+
+      TheHouse.start()
+
+      assert TheHouse.check_winner(player_input, dealer_input) ==
+               "Check your cards! Your hand must contain exactly 5 cards, Suits must be in #{
+                 suits
+               }. Values must be in #{values}"
+    end
+
+    test "returns an error if a player sends a PokerHand with an invalid value" do
+      player_input = {"Player", ["11S", "KS", "QS", "JS", "TS"]}
+      dealer_input = {"Dealer", ["AS", "KS", "QS", "JS", "TS"]}
+
+      suits = Card.Suit.values()
+      values = Card.Value.values()
+
+      TheHouse.start()
+
+      assert TheHouse.check_winner(player_input, dealer_input) ==
+               "Check your cards! Your hand must contain exactly 5 cards, Suits must be in #{
+                 suits
+               }. Values must be in #{values}"
+    end
+
+    test "returns an error if a player sends a PokerHand with an invalid suit" do
+      player_input = {"Player", ["AH", "KS", "QS", "JS", "TS"]}
+      dealer_input = {"Dealer", ["AW", "KS", "QS", "JS", "TS"]}
+
+      suits = Card.Suit.values()
+      values = Card.Value.values()
+
+      TheHouse.start()
+
+      assert TheHouse.check_winner(player_input, dealer_input) ==
+               "Check your cards! Your hand must contain exactly 5 cards, Suits must be in #{
+                 suits
+               }. Values must be in #{values}"
+    end
   end
 
   describe "check_winner correctly return the results" do

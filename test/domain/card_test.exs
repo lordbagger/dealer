@@ -117,4 +117,21 @@ defmodule CardTest do
       assert Card.high_card(cards) == %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts}
     end
   end
+
+  describe "valid_cards?" do
+    test "returns true if an Array of Strings correctly represents an Array of %Card{}" do
+      cards = ["2S", "4S", "6S", "8S", "AS"]
+      assert Card.valid_cards?(cards) == true
+    end
+
+    test "returns false if one of the elements does not match a %Card{}" do
+      cards = ["2S", "4S", "6S", "8S", "AW"]
+      assert Card.valid_cards?(cards) == false
+    end
+
+    test "returns false if an Array of Strings correctly represents an Array of %Card{} but doesn't contain 5 elements" do
+      cards = ["2S", "4S", "6S", "8S"]
+      assert Card.valid_cards?(cards) == false
+    end
+  end
 end

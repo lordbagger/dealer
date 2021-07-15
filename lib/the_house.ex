@@ -32,6 +32,25 @@ defmodule TheHouse do
   end
 
   def handle_call({:check_winner, player, dealer}, _from, state) do
+    {_, player_input} = player
+    {_, dealer_input} = dealer
+
+    case Card.valid_cards?(player_input) && Card.valid_cards?(dealer_input) do
+      false ->
+        values = Card.Value.values()
+        suits = Card.Suit.values()
+
+        {:reply,
+         "Check your cards! Your hand must contain exactly 5 cards, Suits must be in #{suits}. Values must be in #{
+           values
+         }", state}
+
+      _ ->
+        check_winner(player, dealer, state)
+    end
+  end
+
+  defp check_winner(player, dealer, state) do
     {player_name, player_input} = player
     {dealer_name, dealer_input} = dealer
 
