@@ -35,6 +35,7 @@ For Example:
 
 The Cards are represented by two values: 
 The first one being its value (2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A)
+
 The second one being its suit (S, H, C, D)
 
 The winner is the player whose hand has the highest ranking according to this order:
