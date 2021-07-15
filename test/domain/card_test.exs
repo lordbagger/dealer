@@ -55,24 +55,24 @@ defmodule CardTest do
       one_char = "s"
       more_than_one = "ssssssssssss"
 
-      assert Card.from_string(empty) == :invalid_length
-      assert Card.from_string(one_char) == :invalid_length
-      assert Card.from_string(more_than_one) == :invalid_length
+      assert Card.card_from_string(empty) == :invalid_length
+      assert Card.card_from_string(one_char) == :invalid_length
+      assert Card.card_from_string(more_than_one) == :invalid_length
     end
 
     test "returns :invalid_value when the value is not listed in Card.Value" do
       no_value = "DD"
-      assert Card.from_string(no_value) == :invalid_value
+      assert Card.card_from_string(no_value) == :invalid_value
     end
 
     test "returns :invalid_suit when the suit is not listed in Card.Suit" do
       no_suit = "TA"
-      assert Card.from_string(no_suit) == :invalid_suit
+      assert Card.card_from_string(no_suit) == :invalid_suit
     end
 
     test "returns a %Card{}" do
       card = "TS"
-      assert Card.from_string(card) == %Card{value: Card.Value.Ten, suit: Card.Suit.Spades}
+      assert Card.card_from_string(card) == %Card{value: Card.Value.Ten, suit: Card.Suit.Spades}
     end
   end
 

@@ -80,8 +80,12 @@ defmodule Card do
     v.value <> s.value
   end
 
-  def from_string(card) when is_binary(card) do
+  def card_from_string(card) when is_binary(card) do
     card |> check_length |> check_value |> check_suit |> to_card
+  end
+
+  def cards_from_string(cards) when is_list(cards) do
+    cards |> Enum.map(fn c -> card_from_string(c) end)
   end
 
   defp check_length(string) do
