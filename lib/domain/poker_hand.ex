@@ -106,7 +106,7 @@ defmodule PokerHand do
   defp find_by_sequence(cards) do
     case is_straight_flush?(cards) do
       true ->
-        ranking = %PokerHand{ranking: PokerHand.Ranking.StraightFlush, cards: cards}
+        %PokerHand{ranking: PokerHand.Ranking.StraightFlush, cards: cards}
 
       false ->
         case is_straight?(cards) do
