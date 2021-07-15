@@ -161,7 +161,7 @@ defmodule PokerHand do
     true
   end
 
-  def frequencies(cards) do
+  defp frequencies(cards) do
     Enum.reduce(cards, %{}, fn c, acc -> Map.update(acc, c.value, 1, fn v -> v + 1 end) end)
   end
 end
