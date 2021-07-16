@@ -14,21 +14,16 @@ On the root folder, run :
 ```
 iex -S mix
 ````
-Once inside the interactive mode, start the GenServer using: 
 
-```
-TheHouse.start()
-```
-
-To evaluate two Poker Hands, you must call TheHouse.check_winner(player, dealer) with two arguments, both of them are a tuple of two elements. The first element is the name of the player, and the second element is an array of 5 Strings representing Poker cards.
+To evaluate two Poker Hands, you must call Dealer.check_winner(player, dealer) with two arguments, being a string with 5 representations of a Card.
 
 For Example:
 
 ````
-      player_input = {"Player", ["AS", "KS", "QS", "JS", "TS"]}
-      dealer_input = {"Dealer", ["2H", "4H", "6H", "7H", "9H"]}
+      player_input = "AS KS QS JS TS"
+      dealer_input = "2H 4H 6H 7H 9H"
 
-      TheHouse.check_winner(player_input, dealer_input)
+      Dealer.check_winner(player_input, dealer_input)
 
       ##This will return "Player wins - Straight Flush"
 ````
