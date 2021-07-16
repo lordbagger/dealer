@@ -1,20 +1,24 @@
 defmodule Dealer do
-  def check_winner(player_cards, dealer_cards) do
-    left = PokerHand.find_ranking(player_cards)
-    right = PokerHand.find_ranking(dealer_cards)
+  def check_winner(black_input, white_input)
+      when is_binary(black_input) and is_binary(white_input) do
+    black_hand = Card.cards_from_string(black_input)
+    white_hand = Card.cards_from_string(white_input)
 
-    compare_results(left, right)
+    black_hand_ranked = PokerHand.find_ranking(black_hand)
+    white_hand_ranked = PokerHand.find_ranking(white_hand)
+
+    compare_results(black_hand_ranked, white_hand_ranked) |> handle_winner
   end
 
-  defp compare_results(player_hand, dealer_hand) do
-    case player_hand.ranking.value > dealer_hand.ranking.value do
+  defp compare_results(black_hand, white_hand) do
+    case black_hand.ranking.value > white_hand.ranking.value do
       true ->
-        {:player_wins, player_hand}
+        {:black_wins, black_hand}
 
       false ->
-        case dealer_hand.ranking.value > player_hand.ranking.value do
-          true -> {:dealer_wins, dealer_hand}
-          false -> compare_high_cards(player_hand.cards, dealer_hand.cards)
+        case white_hand.ranking.value > black_hand.ranking.value do
+          true -> {:white_wins, white_hand}
+          false -> compare_high_cards(black_hand.cards, white_hand.cards)
         end
     end
   end
@@ -23,25 +27,44 @@ defmodule Dealer do
     :tie
   end
 
-  defp compare_high_cards(player_cards, dealer_cards) do
-    high_card_player = Card.high_card(player_cards)
-    high_card_dealer = Card.high_card(dealer_cards)
+  defp compare_high_cards(black_hand, white_hand) do
+    high_card_black = Card.high_card(black_hand)
+    high_card_white = Card.high_card(white_hand)
 
-    case high_card_player.value.value_of > high_card_dealer.value.value_of do
+    case high_card_black.value.value_of > high_card_white.value.value_of do
       true ->
-        {:player_wins_high_card, high_card_player}
+        {:black_wins_high_card, high_card_black}
 
       false ->
-        case high_card_dealer.value.value_of > high_card_player.value.value_of do
+        case high_card_white.value.value_of > high_card_black.value.value_of do
           true ->
-            {:dealer_wins_high_card, high_card_dealer}
+            {:white_wins_high_card, high_card_white}
 
           false ->
             compare_high_cards(
-              List.delete(player_cards, high_card_player),
-              List.delete(dealer_cards, high_card_dealer)
+              List.delete(black_hand, high_card_black),
+              List.delete(white_hand, high_card_white)
             )
         end
+    end
+  end
+
+  defp handle_winner(winner) do
+    case winner do
+      {:white_wins, ranked} ->
+        "White wins - #{ranked.ranking.to_string}"
+
+      {:black_wins, ranked} ->
+        "Black wins - #{ranked.ranking.to_string}"
+
+      {:white_wins_high_card, high_card} ->
+        "White wins - High Card: #{Card.card_to_string(high_card)}"
+
+      {:black_wins_high_card, high_card} ->
+        "Black wins - High Card: #{Card.card_to_string(high_card)}"
+
+      _ ->
+        "TIE"
     end
   end
 end

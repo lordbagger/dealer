@@ -1,247 +1,131 @@
 defmodule DealerTest do
   use ExUnit.Case
 
+  @straight_flush "2H 3H 4H 5H 6H"
+  @four_of_a_kind "7H 7C 7D 7S 5D"
+  @full_house "AS AH AC KS KH"
+  @flush "2C 3C 6C JC QC"
+  @straight "2D 3D 4S 5D 6D"
+  @three_of_a_kind "8H 8C 8D 5S 6S"
+  @two_pairs "9H 9C TD TS JD"
+  @pair "TC TH QD KC AH"
+  @high_card "AC KD QH 5C 3S"
+
+  @higher_straight "9D TS JS QS KC"
+
   describe "check_winner returns a winner by higher rank" do
-    test "StraightFlush beats FourOfAKind, dealer wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Four, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+    test "StraightFlush beats FourOfAKind, white wins" do
+      black = @straight_flush
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Diamons}
-      ]
+      white = @four_of_a_kind
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.StraightFlush, cards: dealer}
+      expected_ranking = "Straight Flush"
 
-      assert Dealer.check_winner(player, dealer) == {:dealer_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "Black wins - #{expected_ranking}"
     end
 
-    test "FourOfAKind beats FullHouse, dealer wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Diamons}
-      ]
+    test "FourOfAKind beats FullHouse, black wins" do
+      black = @four_of_a_kind
 
-      player = [
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.King, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.King, suit: Card.Suit.Hearts}
-      ]
+      white = @full_house
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.FourOfAKind, cards: dealer}
+      expected_ranking = "Four Of A Kind"
 
-      assert Dealer.check_winner(player, dealer) == {:dealer_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "Black wins - #{expected_ranking}"
     end
 
-    test "FullHouse beats Flush, player wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts}
-      ]
+    test "FullHouse beats Flush, white wins" do
+      black = @flush
 
-      player = [
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.King, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.King, suit: Card.Suit.Hearts}
-      ]
+      white = @full_house
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.FullHouse, cards: player}
+      expected_ranking = "Full House"
 
-      assert Dealer.check_winner(player, dealer) == {:player_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "White wins - #{expected_ranking}"
     end
 
-    test "Flush beats Straight, player wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Four, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+    test "Flush beats Straight, white wins" do
+      black = @straight
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts}
-      ]
+      white = @flush
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.Flush, cards: player}
+      expected_ranking = "Flush"
 
-      assert Dealer.check_winner(player, dealer) == {:player_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "White wins - #{expected_ranking}"
     end
 
-    test "Straight beats ThreeOfAKind, dealer wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Four, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+    test "Straight beats ThreeOfAKind, black wins" do
+      black = @straight
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+      white = @three_of_a_kind
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.Straight, cards: dealer}
+      expected_ranking = "Straight"
 
-      assert Dealer.check_winner(player, dealer) == {:dealer_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "Black wins - #{expected_ranking}"
     end
 
-    test "ThreeOfAKind beats TwoPairs, player wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+    test "ThreeOfAKind beats TwoPairs, white wins" do
+      black = @two_pairs
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+      white = @three_of_a_kind
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.ThreeOfAKind, cards: player}
+      expected_ranking = "Three Of A Kind"
 
-      assert Dealer.check_winner(player, dealer) == {:player_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "White wins - #{expected_ranking}"
     end
 
-    test "TwoPairs beats Pair, dealer wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+    test "TwoPairs beats Pair, black wins" do
+      black = @two_pairs
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+      white = @pair
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.TwoPairs, cards: dealer}
+      expected_ranking = "Two Pairs"
 
-      assert Dealer.check_winner(player, dealer) == {:dealer_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "Black wins - #{expected_ranking}"
     end
 
-    test "Pair beats HighCard, player wins" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ten, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+    test "Pair beats HighCard, white wins" do
+      black = @high_card
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Diamonds},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+      white = @pair
 
-      expected_ranking = %PokerHand{ranking: PokerHand.Ranking.Pair, cards: player}
+      expected_ranking = "Pair"
 
-      assert Dealer.check_winner(player, dealer) == {:player_wins, expected_ranking}
+      assert Dealer.check_winner(black, white) == "White wins - #{expected_ranking}"
     end
   end
 
   describe "check_winner checks for a winner by higher card, when a tie happens" do
-    test "player and dealer have the same rank in hand, dealer wins by higher card value" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Two, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Spades}
-      ]
+    test "black and white have the same rank in hand, black wins by higher card value" do
+      black = @higher_straight
 
-      player = [
-        %Card{value: Card.Value.Three, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.King, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.King, suit: Card.Suit.Diamonds}
-      ]
+      white = @straight
 
-      assert Dealer.check_winner(player, dealer) ==
-               {:dealer_wins_high_card, %Card{value: Card.Value.Ace, suit: Card.Suit.Hearts}}
+      expected_high_card = "KC"
+
+      assert Dealer.check_winner(black, white) ==
+               "Black wins - High Card: #{expected_high_card}"
     end
 
-    test "player and dealer have the same rank in hand, player wins by higher card value" do
-      dealer = [
-        %Card{value: Card.Value.Ten, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.Queen, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.King, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Nine, suit: Card.Suit.Diamonds}
-      ]
+    test "black and white have the same rank in hand, white wins by higher card value" do
+      black = @straight
 
-      player = [
-        %Card{value: Card.Value.Ten, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Jack, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Queen, suit: Card.Suit.Clubs},
-        %Card{value: Card.Value.King, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Ace, suit: Card.Suit.Spades}
-      ]
+      white = @higher_straight
 
-      assert Dealer.check_winner(player, dealer) ==
-               {:player_wins_high_card, %Card{value: Card.Value.Ace, suit: Card.Suit.Spades}}
+      expected_high_card = "KC"
+
+      assert Dealer.check_winner(black, white) ==
+               "White wins - High Card: #{expected_high_card}"
     end
   end
 
   describe "check_winner can't find a winner" do
     test "returns :tie when both hands are identical" do
-      dealer = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Four, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Hearts},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Hearts}
-      ]
+      black = @flush
 
-      player = [
-        %Card{value: Card.Value.Two, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Three, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Four, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Five, suit: Card.Suit.Spades},
-        %Card{value: Card.Value.Six, suit: Card.Suit.Spades}
-      ]
+      white = @flush
 
-      assert Dealer.check_winner(player, dealer) == :tie
+      assert Dealer.check_winner(black, white) == "TIE"
     end
   end
 end

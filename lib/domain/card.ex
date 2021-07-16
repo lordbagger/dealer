@@ -84,13 +84,13 @@ defmodule Card do
     card |> check_length |> check_value |> check_suit |> to_card
   end
 
-  def cards_from_string(cards) when is_list(cards) do
-    cards |> Enum.map(fn c -> card_from_string(c) end)
+  def cards_from_string(cards) when is_binary(cards) do
+    cards |> String.split() |> Enum.map(fn s -> card_from_string(s) end)
   end
 
   def valid_cards?(cards) do
     cards |> cards_from_string() |> Enum.all?(fn c -> is_card?(c) end) &&
-      Enum.count(cards) == 5
+      cards |> String.split() |> Enum.count() == 5
   end
 
   defp check_length(string) do
