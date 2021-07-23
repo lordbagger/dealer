@@ -20,12 +20,9 @@ To evaluate two Poker Hands, you must call Dealer.check_winner(player, dealer) w
 For Example:
 
 ````
-      player_input = "AS KS QS JS TS"
-      dealer_input = "2H 4H 6H 7H 9H"
+      Dealer.check_winner("AS KS QS JS TS", "2H 4H 6H 7H 9H")
 
-      Dealer.check_winner(player_input, dealer_input)
-
-      ##This will return "Player wins - Straight Flush"
+      ##This will return "Black wins - Straight Flush"
 ````
 
 The Cards are represented by two values: 
